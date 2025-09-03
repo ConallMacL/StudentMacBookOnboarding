@@ -4,9 +4,691 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Student MacBook Onboarding</title>
-<!-- (Content omitted here for brevity, but this is the same as the big HTML we created earlier) -->
+<style>
+  :root{
+    --brand:#0A66C2; --brand-dark:#073E8C; --ink:#1b1f23; --muted:#5b6775;
+    --soft:#f6f8fb; --card:#fff; --radius:16px; --shadow:0 8px 24px rgba(2,16,40,.08);
+    --ok:#2ea44f; --warn:#d29922; --danger:#c62828;
+    --gold1:#f6e27a; --gold2:#d4af37; --silver1:#e0e0e0; --silver2:#a9a9a9; --bronze1:#d7a86e; --bronze2:#8b5a2b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink);
+       background:linear-gradient(180deg,#f9fbff,#f4f7fb 35%,#eef2f7)}
+  .wrap{max-width:1080px; margin:auto; padding:24px}
+  header{
+    background: radial-gradient(1200px 500px at 20% -20%, #e9f2ff, transparent),
+                radial-gradient(900px 400px at 120% -40%, #e7f9f0, transparent);
+    padding:28px 24px 22px; border-bottom:1px solid #e7ebf0;
+  }
+  .title{display:flex; align-items:center; gap:12px; flex-wrap:wrap}
+  .title h1{margin:0; color:var(--brand)}
+  .note{color:var(--muted); font-size:.95rem}
+  .progress{position:relative; margin-top:14px; height:12px; background:#e9eef5; border-radius:999px; overflow:hidden}
+  .progress>div{position:absolute; inset:0 100% 0 0; background:linear-gradient(90deg,var(--brand), #37c); border-radius:999px; transition:inset .5s ease}
+  .cards{display:grid; gap:16px; margin-top:16px}
+  @media (min-width:860px){ .cards{grid-template-columns:1fr 1fr} }
+  .card{background:var(--card); border:1px solid #e7ebf0; border-radius:var(--radius); box-shadow:var(--shadow); padding:18px}
+  .btn{border:1px solid #d5dbe6; background:#fff; border-radius:12px; padding:10px 14px; cursor:pointer; font-weight:700}
+  .btn.primary{background:linear-gradient(180deg,#3e8bff,#2b6adf); color:#fff; border:none}
+  .btn.small{padding:6px 10px; font-weight:600; border-radius:10px}
+  .pill{display:inline-flex; gap:8px; align-items:center; padding:6px 10px; border-radius:999px; background:#eef4ff; color:#0a2c66; font-weight:600; font-size:0.9rem}
+  .badge{display:inline-flex; align-items:center; gap:8px; font-weight:700; color:#0b5; background:#e9f7ef; padding:6px 10px; border-radius:999px}
+  .row{display:flex; gap:12px; flex-wrap:wrap}
+  .landing{display:grid; gap:16px}
+  @media (min-width:860px){ .landing{grid-template-columns:1fr 1fr} }
+  .landing .card{cursor:pointer; transition:transform .2s ease}
+  .landing .card:hover{transform:translateY(-2px)}
+  .hidden{display:none !important}
+
+  .module{border:1px solid #e3e8ef; border-radius:14px; overflow:hidden; background:#fff}
+  .module summary{list-style:none; cursor:pointer; padding:14px 16px; font-weight:700;
+                  display:flex; align-items:center; justify-content:space-between;
+                  background:linear-gradient(180deg,#fff,#f8fbff)}
+  .module summary::-webkit-details-marker{display:none}
+  .module[open] summary{background:#f1f6ff}
+  .module .content{padding:12px 16px 16px}
+  .locked{opacity:.55; pointer-events:none; filter:grayscale(.3)}
+  .checklist{display:grid; gap:10px; margin:10px 0}
+  .check{display:flex; align-items:flex-start; gap:10px; padding:10px; border-radius:12px;
+         border:1px dashed #dbe3ee; background:#fafcff; transition:background .2s}
+  .check input{margin-top:2px; transform:scale(1.2)}
+  .check.done{background:#f0fbf3; border-color:#cfe9d7}
+  .callout{border-left:6px solid var(--brand); background:#f2f7ff; padding:12px; border-radius:12px; margin:10px 0}
+  .challenge{border-left:6px solid var(--warn); background:#fff8e6; padding:12px; border-radius:12px; margin:10px 0}
+
+  .quiz{border:1px solid #e7ebf0; border-radius:16px; background:#fff; padding:16px}
+  .q{padding:12px; border-radius:12px; border:1px solid #edf1f6; margin-bottom:10px}
+  .q.correct{border-color:#cfe9d7; background:#f0fbf3}
+  .q.wrong{border-color:#f2c0c4; background:#fff1f2}
+  .opt{display:block; padding:8px 10px; border-radius:10px; border:1px solid #e7ebf0; margin:6px 0; cursor:pointer}
+  .result{padding:12px; border-radius:12px; margin-top:12px}
+  .pass{background:#f0fbf3; border:1px solid #cfe9d7}
+  .fail{background:#fff1f2; border:1px solid #f2c0c4}
+
+  .gallery{border:1px solid #e7ebf0; border-radius:14px; padding:12px; background:#fff}
+  .gesture{display:flex; flex-direction:column; gap:8px; align-items:center; text-align:center; padding:10px;
+           border:1px dashed #e3e8ef; border-radius:12px}
+  .gesture svg{width:160px; height:120px}
+
+  footer{margin:24px 0 12px; color:var(--muted); font-size:.9rem}
+  .caption{font-size:.92rem; color:#3a485a}
+
+  /* a11y helpers */
+  .skip{position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;}
+  .skip:focus{position:static; width:auto; height:auto; padding:8px; background:#000; color:#fff; border-radius:8px}
+</style>
 </head>
 <body>
-<p>This is the placeholder. The full HTML code will be filled in as per the earlier generated version.</p>
+<a class="skip" href="#main">Skip to content</a>
+
+<header>
+  <div class="wrap">
+    <div class="title">
+      <h1>Student MacBook Onboarding</h1>
+      <span class="badge" id="progressLabel">0% complete</span>
+    </div>
+    <div class="progress" aria-label="Progress"><div id="bar"></div></div>
+    <p class="note" style="margin-top:8px">
+      Your progress saves only on this browser. If you switch device or clear history, it resets.
+    </p>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="resetAll">Reset everything</button>
+      <button class="btn" id="switchPath">Switch track</button>
+      <a class="btn" href="#helpful" aria-label="Helpful links and demos">Helpful links</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <!-- LANDING -->
+  <section id="landing" class="landing">
+    <div class="card" onclick="selectPath('ks3')" role="button" tabindex="0" aria-label="Start Year 7 to 11 onboarding">
+      <h2>Year 7–11 Path</h2>
+      <p>Start with the basics, smart online behaviour, and creative projects. Earn a Bronze/Silver/Gold badge.</p>
+      <ul class="caption">
+        <li>Getting started</li>
+        <li>Safe & smart online</li>
+        <li>Core apps & creativity</li>
+        <li>Wellbeing</li>
+        <li>Quiz + badge</li>
+      </ul>
+      <div class="callout">Recommended for new starters in Year 7.</div>
+    </div>
+    <div class="card" onclick="selectPath('ks5')" role="button" tabindex="0" aria-label="Start Sixth Form onboarding">
+      <h2>Sixth Form Path</h2>
+      <p>Fast-track setup, academic integrity & AI, organisation, and portfolio building. Earn your Readiness badge.</p>
+      <ul class="caption">
+        <li>Fast start</li>
+        <li>Study skills & AI integrity</li>
+        <li>Time management</li>
+        <li>Portfolio</li>
+        <li>Quiz + badge</li>
+      </ul>
+      <div class="callout">Designed for Sixth Form students.</div>
+    </div>
+  </section>
+
+  <!-- KS3/4 PATH -->
+  <section id="ks3" class="hidden">
+    <h2 class="pill">Year 7–11 Onboarding</h2>
+
+    <!-- K3 M1 -->
+    <details class="module" id="k3m1" open>
+      <summary><span>Module 1: Getting Started 💻</span><span class="pill">Tick all to unlock next</span></summary>
+      <div class="content">
+        <div class="checklist" data-module="k3-1">
+          <label class="check"><input type="checkbox" /> Log in with your school account.</label>
+          <label class="check"><input type="checkbox" /> Explore the Dock and open Finder.</label>
+          <label class="check"><input type="checkbox" /> Find iCloud Drive and create a “My Stuff” folder.</label>
+          <label class="check"><input type="checkbox" /> Open Safari and bookmark your classroom platform.</label>
+        </div>
+        <div class="callout"><strong>Wow moment:</strong> Press <span class="caption">⌘ + Space</span> and type <code>25*12</code>. Spotlight calculates instantly!</div>
+        <div class="challenge"><strong>Challenge:</strong> Change your wallpaper, then take a screenshot (⌘ + Shift + 5).</div>
+
+        <h3 style="margin-top:10px">Gestures (visual)</h3>
+        <div class="gallery" style="display:grid; gap:12px; grid-template-columns:repeat(3,1fr)">
+          <div class="gesture">
+            <svg viewBox="0 0 200 120" aria-label="Two-finger scroll">
+              <rect x="10" y="6" width="180" height="108" rx="12" fill="#eef4ff" stroke="#cfd6e1"/>
+              <circle cx="92" cy="64" r="12" fill="#bbb"/><circle cx="112" cy="64" r="12" fill="#bbb"/>
+              <path d="M102 30 L102 50" stroke="#0A66C2" stroke-width="4" stroke-linecap="round" marker-end="url(#a1)"/>
+              <defs><marker id="a1" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0A66C2"/></marker></defs>
+            </svg>
+            <small>Two-finger scroll</small>
+          </div>
+          <div class="gesture">
+            <svg viewBox="0 0 200 120" aria-label="Three-finger swipe">
+              <rect x="10" y="6" width="180" height="108" rx="12" fill="#eef4ff" stroke="#cfd6e1"/>
+              <circle cx="84" cy="74" r="10" fill="#bbb"/><circle cx="102" cy="74" r="10" fill="#bbb"/><circle cx="120" cy="74" r="10" fill="#bbb"/>
+              <path d="M50 44 L150 44" stroke="#0A66C2" stroke-width="4" stroke-linecap="round" marker-end="url(#a2)"/>
+              <defs><marker id="a2" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#0A66C2"/></marker></defs>
+            </svg>
+            <small>Three-finger swipe (spaces)</small>
+          </div>
+          <div class="gesture">
+            <svg viewBox="0 0 200 120" aria-label="Pinch to zoom">
+              <rect x="10" y="6" width="180" height="108" rx="12" fill="#eef4ff" stroke="#cfd6e1"/>
+              <circle cx="90" cy="60" r="10" fill="#bbb"/><circle cx="120" cy="60" r="10" fill="#bbb"/>
+              <path d="M90 60 L70 40 M120 60 L140 40" stroke="#0A66C2" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+            <small>Pinch to zoom</small>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- K3 M2 -->
+    <details class="module locked" id="k3m2">
+      <summary><span>Module 2: Safe & Smart Online 🌐</span><span class="pill">Locked</span></summary>
+      <div class="content">
+        <p>Be kind, protect your privacy, and think before you post. Ask an adult if you’re unsure.</p>
+        <div class="checklist" data-module="k3-2">
+          <label class="check"><input type="checkbox" /> Read the school’s acceptable use rules.</label>
+          <label class="check"><input type="checkbox" /> Turn on strong passcode/Touch ID where available.</label>
+          <label class="check"><input type="checkbox" /> Write 3 “golden rules” for your class discussion.</label>
+        </div>
+        <div class="row">
+          <a class="btn small" href="https://www.childnet.com/" target="_blank" rel="noopener">Childnet</a>
+          <a class="btn small" href="https://support.apple.com/guide/mac-help/use-focus-on-your-mac-mchl05ec5b66/mac" target="_blank" rel="noopener">Use Focus on Mac</a>
+        </div>
+      </div>
+    </details>
+
+    <!-- K3 M3 -->
+    <details class="module locked" id="k3m3">
+      <summary><span>Module 3: Core Apps 📚</span><span class="pill">Locked</span></summary>
+      <div class="content">
+        <div class="row">
+          <div class="card" style="flex:1"><h3>Pages</h3><p>Create documents with images and headings.</p></div>
+          <div class="card" style="flex:1"><h3>Keynote</h3><p>Make posters and slides with animations.</p></div>
+          <div class="card" style="flex:1"><h3>Numbers</h3><p>Collect data and make charts.</p></div>
+        </div>
+        <div class="checklist" data-module="k3-3" style="margin-top:8px">
+          <label class="check"><input type="checkbox" /> Create a Keynote poster with a title and one image.</label>
+          <label class="check"><input type="checkbox" /> Share your file to your class space (Teams/Showbie/Drive).</label>
+        </div>
+        <div class="row">
+          <a class="btn small" href="https://support.apple.com/keynote" target="_blank" rel="noopener">Keynote basics</a>
+          <a class="btn small" href="https://support.apple.com/pages" target="_blank" rel="noopener">Pages basics</a>
+        </div>
+      </div>
+    </details>
+
+    <!-- K3 M4 -->
+    <details class="module locked" id="k3m4">
+      <summary><span>Module 4: Creativity & Collaboration 🎨👥</span><span class="pill">Locked</span></summary>
+      <div class="content">
+        <p>Work together respectfully. Build, share, and give helpful feedback.</p>
+        <div class="checklist" data-module="k3-4">
+          <label class="check"><input type="checkbox" /> AirDrop a photo or file to your partner.</label>
+          <label class="check"><input type="checkbox" /> In Keynote, add one animation and one transition.</label>
+        </div>
+        <div class="row">
+          <a class="btn small" href="https://support.apple.com/guide/mac-help/use-airdrop-to-send-files-mchlp1214/mac" target="_blank" rel="noopener">How to AirDrop</a>
+          <a class="btn small" href="https://support.apple.com/guide/keynote/welcome/mac" target="_blank" rel="noopener">Share in Keynote</a>
+        </div>
+      </div>
+    </details>
+
+    <!-- K3 M5 -->
+    <details class="module locked" id="k3m5">
+      <summary><span>Module 5: Digital Wellbeing ⏳</span><span class="pill">Locked</span></summary>
+      <div class="content">
+        <p>Find balance. Take breaks. Keep notifications under control.</p>
+        <div class="checklist" data-module="k3-5">
+          <label class="check"><input type="checkbox" /> Set a Focus (e.g., School) with allowed apps/people.</label>
+          <label class="check"><input type="checkbox" /> Reflect: write one way you’ll keep balance this week.</label>
+        </div>
+        <div class="row">
+          <a class="btn small" href="https://support.apple.com/guide/mac-help/set-screen-time-limits-mchla5d2d734/mac" target="_blank" rel="noopener">Screen Time</a>
+        </div>
+      </div>
+    </details>
+
+    <!-- K3 M6 -->
+    <details class="module locked" id="k3m6">
+      <summary><span>Module 6: Quiz & Badges 🏅</span><span class="pill">Locked</span></summary>
+      <div class="content">
+        <div class="quiz">
+          <h3>Quiz (5 quick questions)</h3>
+          <div id="quizWrap_k3"></div>
+          <div class="row" style="margin-top:8px">
+            <button class="btn primary" id="submitQuiz_k3" disabled>Submit quiz</button>
+            <button class="btn" id="resetQuiz_k3">Reset quiz</button>
+          </div>
+          <div id="quizResult_k3" class="result" style="display:none"></div>
+        </div>
+        <div class="card" id="badgeArea_k3" style="display:none; margin-top:12px">
+          <h3>Your Badge</h3>
+          <canvas id="badgeCanvas_k3" width="800" height="800" style="width:100%; border:1px solid #e7ebf0; border-radius:12px"></canvas>
+          <div class="row" style="margin-top:8px">
+            <button class="btn primary" id="dlBadge_k3">Download Badge (PNG)</button>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- KS5 PATH -->
+  <section id="ks5" class="hidden">
+    <h2 class="pill">Sixth Form Onboarding</h2>
+
+    <!-- K5 M1 -->
+    <details class="module" id="k5m1" open>
+      <summary><span>Module 1: Fast Start ⚡</span><span class="pill">Tick all to unlock next</span></summary>
+      <div class="content">
+        <div class="checklist" data-module="k5-1">
+          <label class="check"><input type="checkbox" /> Log in and set up Touch ID if available.</label>
+          <label class="check"><input type="checkbox" /> Create folders for subjects in iCloud Drive.</label>
+          <label class="check"><input type="checkbox" /> Learn ⌘ + Tab app switching and ⌘ + Space Spotlight.</label>
+        </div>
+        <div class="callout">Tip: Press ⌘ + Tab and hold ⌘ to see recent apps.</div>
+      </div>
+    </details>
+
+    <!-- K5 M2 -->
+    <details class="module locked" id="k5m2">
+      <summary><span>Module 2: Study Skills & AI Integrity 📖</span><span class="pill">Locked</span></summary>
+      <div class="content">
+        <p>Use AI to support—not replace—your thinking. Always reference your sources.</p>
+        <div class="checklist" data-module="k5-2">
+          <label class="check"><input type="checkbox" /> Save a page to Safari Reading List and summarise in your own words.</label>
+          <label class="check"><input type="checkbox" /> Note when AI can help (brainstorm, outline) and when it’s not allowed.</label>
+        </div>
+        <div class="row">
+          <a class="btn small" href="https://support.apple.com/guide/safari/add-or-remove-items-from-your-reading-list-ibrw1030/mac" target="_blank" rel="noopener">Reading List</a>
+        </div>
+      </div>
+    </details>
+
+    <!-- K5 M3 -->
+    <details class="module locked" id="k5m3">
+      <summary><span>Module 3: Organisation ⏰</span><span class="pill">Locked</span></summary>
+      <div class="content">
+        <p>Plan your time. Keep calm during assessments.</p>
+        <div class="checklist" data-module="k5-3">
+          <label class="check"><input type="checkbox" /> Add a revision timetable to Calendar.</label>
+          <label class="check"><input type="checkbox" /> Create a Reminders list for this week’s tasks.</label>
+        </div>
+        <div class="row">
+          <a class="btn small" href="https://support.apple.com/guide/calendar/welcome/mac" target="_blank" rel="noopener">Calendar</a>
+          <a class="btn small" href="https://support.apple.com/guide/reminders/welcome/mac" target="_blank" rel="noopener">Reminders</a>
+        </div>
+      </div>
+    </details>
+
+    <!-- K5 M4 -->
+    <details class="module locked" id="k5m4">
+      <summary><span>Module 4: Portfolio 💼</span><span class="pill">Locked</span></summary>
+      <div class="content">
+        <p>Build a simple digital portfolio you can share for uni or work.</p>
+        <div class="checklist" data-module="k5-4">
+          <label class="check"><input type="checkbox" /> Create a one-slide “About Me” in Keynote.</label>
+          <label class="check"><input type="checkbox" /> Export as PDF and save to your portfolio folder.</label>
+        </div>
+        <div class="row">
+          <a class="btn small" href="https://support.apple.com/keynote" target="_blank" rel="noopener">Keynote basics</a>
+        </div>
+      </div>
+    </details>
+
+    <!-- K5 M5 -->
+    <details class="module locked" id="k5m5">
+      <summary><span>Module 5: Quiz & Readiness Badge 🎓</span><span class="pill">Locked</span></summary>
+      <div class="content">
+        <div class="quiz">
+          <h3>Quiz (5 quick questions)</h3>
+          <div id="quizWrap_k5"></div>
+          <div class="row" style="margin-top:8px">
+            <button class="btn primary" id="submitQuiz_k5" disabled>Submit quiz</button>
+            <button class="btn" id="resetQuiz_k5">Reset quiz</button>
+          </div>
+          <div id="quizResult_k5" class="result" style="display:none"></div>
+        </div>
+        <div class="card" id="badgeArea_k5" style="display:none; margin-top:12px">
+          <h3>Your Readiness Badge</h3>
+          <canvas id="badgeCanvas_k5" width="800" height="800" style="width:100%; border:1px solid #e7ebf0; border-radius:12px"></canvas>
+          <div class="row" style="margin-top:8px">
+            <button class="btn primary" id="dlBadge_k5">Download Badge (PNG)</button>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- Helpful links -->
+  <section id="helpful" style="margin-top:18px">
+    <div class="card">
+      <h2>Helpful Links & Demos</h2>
+      <div class="row">
+        <a class="btn" href="https://support.apple.com/102482" target="_blank" rel="noopener">All Multi-Touch gestures</a>
+        <a class="btn" href="https://support.apple.com/guide/mac-help/take-a-screenshot-mh26782/mac" target="_blank" rel="noopener">Screenshots & recording</a>
+        <a class="btn" href="https://support.apple.com/guide/mac-help/use-airdrop-to-send-files-mchlp1214/mac" target="_blank" rel="noopener">AirDrop</a>
+        <a class="btn" href="https://support.apple.com/guide/mac-help/stream-video-and-audio-with-airplay-mchld7e543a0/mac" target="_blank" rel="noopener">AirPlay</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>Student-facing onboarding • UK English • Progress saves locally • © Your School / Trust</footer>
+</main>
+
+<script>
+/* ---------- Paths & State ---------- */
+const paths = {
+  ks3: { name: "Year 7–11", modules: ["k3m1","k3m2","k3m3","k3m4","k3m5","k3m6"] },
+  ks5: { name: "Sixth Form", modules: ["k5m1","k5m2","k5m3","k5m4","k5m5"] }
+};
+const STORAGE = {
+  path: "studentOnboard.path",
+  ks3: "studentOnboard.v1.ks3",
+  ks5: "studentOnboard.v1.ks5",
+  quiz_k3: "studentOnboard.quiz.ks3",
+  quiz_k5: "studentOnboard.quiz.ks5"
+};
+const $ = (sel, ctx=document)=>ctx.querySelector(sel);
+const $$ = (sel, ctx=document)=>Array.from(ctx.querySelectorAll(sel));
+
+let currentPath = localStorage.getItem(STORAGE.path) || null;
+
+function loadState(key){ try{ return JSON.parse(localStorage.getItem(key)) || {} }catch{ return {} } }
+function saveState(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+/* ---------- Progress ---------- */
+function pctComplete(){
+  const p = paths[currentPath];
+  if(!p) return 0;
+  const total = p.modules.reduce((acc,id)=>acc + $$(".checklist input", document.getElementById(id)).length, 0) + 1; // +1 for badge earned
+  const done = p.modules.reduce((acc,id)=>acc + $$(".checklist input:checked", document.getElementById(id)).length, 0) + (getState().badgeLevel ? 1 : 0);
+  return Math.round(100*done/Math.max(total,1));
+}
+function updateProgressUI(){
+  const pct = pctComplete();
+  $("#bar").style.inset = `0 ${100-pct}% 0 0`;
+  $("#progressLabel").textContent = `${pct}% complete`;
+}
+
+/* ---------- Helper to get / set state for current path ---------- */
+function getState(){
+  const key = currentPath==="ks5" ? STORAGE.ks5 : STORAGE.ks3;
+  const s = loadState(key);
+  if(!s.ticks) s.ticks = {}; // { "k3m1":[true,false,...], ... }
+  return s;
+}
+function setState(s){
+  const key = currentPath==="ks5" ? STORAGE.ks5 : STORAGE.ks3;
+  saveState(key, s);
+}
+
+/* ---------- Select Path ---------- */
+function selectPath(p){
+  currentPath = p;
+  localStorage.setItem(STORAGE.path, p);
+  // Show/hide sections
+  $("#landing").classList.add("hidden");
+  $("#ks3").classList.toggle("hidden", p!=="ks3");
+  $("#ks5").classList.toggle("hidden", p!=="ks5");
+  // Initialise DOM state
+  toDOM(getState());
+  initChecklists();
+  evalLocks();
+  initQuizzes();
+  updateProgressUI();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+$("#switchPath").addEventListener("click", ()=>{
+  const newPath = currentPath==="ks3" ? "ks5" : "ks3";
+  selectPath(newPath);
+});
+
+/* ---------- Locks per path ---------- */
+function evalLocks(){
+  if(!currentPath) return;
+  const mods = paths[currentPath].modules;
+  for(let i=0; i<mods.length-1; i++){
+    const mod = document.getElementById(mods[i]);
+    const next = document.getElementById(mods[i+1]);
+    const allTicked = $$(".checklist input", mod).every(cb=>cb.checked);
+    if(allTicked){
+      next.classList.remove("locked");
+      $("summary .pill", next).textContent = "Ready";
+    } else {
+      next.classList.add("locked");
+      $("summary .pill", next).textContent = "Locked";
+    }
+  }
+  updateProgressUI();
+}
+
+/* ---------- Checklists ---------- */
+function initChecklists(){
+  $$(".checklist").forEach(list=>{
+    list.addEventListener("change", e=>{
+      if(e.target.matches('input[type="checkbox"]')){
+        e.target.closest(".check").classList.toggle("done", e.target.checked);
+        // persist for this module
+        const modEl = e.target.closest(".module");
+        const modId = modEl.id;
+        const s = getState();
+        s.ticks[modId] = $$(".checklist input", modEl).map(cb=>cb.checked);
+        setState(s);
+        evalLocks();
+      }
+    }, { once:false });
+  });
+}
+function toDOM(s){
+  // apply ticks
+  Object.entries(s.ticks || {}).forEach(([modId, arr])=>{
+    const mod = document.getElementById(modId);
+    if(!mod) return;
+    $$(".checklist input", mod).forEach((cb, i)=>{
+      const v = !!arr[i];
+      cb.checked = v;
+      cb.closest(".check").classList.toggle("done", v);
+    });
+  });
+  // show badge if exists
+  if(s.badgeLevel){
+    if(currentPath==="ks3"){ $("#badgeArea_k3").style.display="block"; drawBadge("ks3", s.badgeLevel); }
+    if(currentPath==="ks5"){ $("#badgeArea_k5").style.display="block"; drawBadge("ks5", s.badgeLevel); }
+  }
+}
+
+/* ---------- Reset All ---------- */
+$("#resetAll").addEventListener("click", ()=>{
+  Object.values(STORAGE).forEach(k=>localStorage.removeItem(k));
+  location.reload();
+});
+
+/* ---------- Quizzes ---------- */
+const QUESTIONS_K3 = [
+  { q:"Which shortcut opens Screenshot tools?", opts:["⌘+Shift+4","⌘+Shift+5","⌘+Space","Control+R"], a:1 },
+  { q:"Two-finger gesture usually…", opts:["Zooms in","Right-clicks","Scrolls up/down","Opens Launchpad"], a:2 },
+  { q:"AirDrop is used to…", opts:["Delete files","Send files to nearby Apple devices","Install apps","Change settings"], a:1 },
+  { q:"Online behaviour should be…", opts:["Kind and respectful","Funny at any cost","Private info shared","Ignore adults"], a:0 },
+  { q:"Focus mode helps you…", opts:["Get more notifications","Concentrate with fewer distractions","Turn off the screen","Break the Mac"], a:1 }
+];
+const QUESTIONS_K5 = [
+  { q:"Academic integrity means…", opts:["Using AI text as your own","Citing sources and using your own ideas","Copying friends’ notes word-for-word","Never using technology"], a:1 },
+  { q:"Reading List in Safari lets you…", opts:["Block sites","Save pages to read later","Change wallpaper","Open Terminal"], a:1 },
+  { q:"Best use of AI for study is…", opts:["Write your essay for you","Brainstorm ideas and outline, then you write","Generate fake data","Replace citations"], a:1 },
+  { q:"Calendar & Reminders help by…", opts:["Making games","Planning and tracking tasks","Turning off Wi-Fi","Hiding apps"], a:1 },
+  { q:"A simple portfolio slide might include…", opts:["Random memes","Your name, strengths, and one example of work","Private info","Cheat codes"], a:1 }
+];
+
+function initQuizzes(){
+  // KS3
+  const wrap3 = $("#quizWrap_k3"); if(wrap3){ wrap3.innerHTML = ""; QUESTIONS_K3.forEach((item, idx)=>{
+    const q = document.createElement("div"); q.className="q";
+    q.innerHTML = `<h4>Q${idx+1}. ${item.q}</h4>`+
+      item.opts.map((t,i)=>`<label class="opt"><input type="radio" name="k3q${idx}" value="${i}"/> ${t}</label>`).join("");
+    wrap3.appendChild(q);
+  }); }
+  // KS5
+  const wrap5 = $("#quizWrap_k5"); if(wrap5){ wrap5.innerHTML = ""; QUESTIONS_K5.forEach((item, idx)=>{
+    const q = document.createElement("div"); q.className="q";
+    q.innerHTML = `<h4>Q${idx+1}. ${item.q}</h4>`+
+      item.opts.map((t,i)=>`<label class="opt"><input type="radio" name="k5q${idx}" value="${i}"/> ${t}</label>`).join("");
+    wrap5.appendChild(q);
+  }); }
+
+  // Enable submit only when all answered
+  document.addEventListener("change", e=>{
+    if(e.target.matches('#quizWrap_k3 input[type="radio"]')){
+      const all = QUESTIONS_K3.every((_,i)=>$$(`input[name="k3q${i}"]:checked`).length>0);
+      $("#submitQuiz_k3").disabled = !all;
+    }
+    if(e.target.matches('#quizWrap_k5 input[type="radio"]')){
+      const all = QUESTIONS_K5.every((_,i)=>$$(`input[name="k5q${i}"]:checked`).length>0);
+      $("#submitQuiz_k5").disabled = !all;
+    }
+  });
+}
+
+/* ---------- Quiz Submit Handlers (with badges) ---------- */
+$("#submitQuiz_k3")?.addEventListener("click", ()=>{
+  const answers = QUESTIONS_K3.map((_,i)=>parseInt(($$(`input[name="k3q${i}"]:checked`)[0]||{}).value,10));
+  let score = 0;
+  answers.forEach((v,i)=>{
+    const qDiv = $$("#quizWrap_k3 .q")[i]; qDiv.classList.remove("correct","wrong");
+    if(v===QUESTIONS_K3[i].a){ score++; qDiv.classList.add("correct"); } else { qDiv.classList.add("wrong"); }
+  });
+  const res = $("#quizResult_k3");
+  let level = null;
+  if(score===5) level="gold"; else if(score===4) level="silver"; else if(score===3) level="bronze";
+  if(level){
+    res.className="result pass"; res.style.display="block";
+    res.innerHTML = `<strong>Great work!</strong> You’ve earned the <span class="pill">${level.toUpperCase()} Badge</span>.`;
+    $("#badgeArea_k3").style.display="block"; drawBadge("ks3", level);
+    const s = getState(); s.badgeLevel = level; setState(s);
+  } else {
+    res.className="result fail"; res.style.display="block";
+    res.textContent = "You need at least 3 correct to earn a badge. Please try again.";
+  }
+  updateProgressUI();
+});
+
+$("#submitQuiz_k5")?.addEventListener("click", ()=>{
+  const answers = QUESTIONS_K5.map((_,i)=>parseInt(($$(`input[name="k5q${i}"]:checked`)[0]||{}).value,10));
+  let score = 0;
+  answers.forEach((v,i)=>{
+    const qDiv = $$("#quizWrap_k5 .q")[i]; qDiv.classList.remove("correct","wrong");
+    if(v===QUESTIONS_K5[i].a){ score++; qDiv.classList.add("correct"); } else { qDiv.classList.add("wrong"); }
+  });
+  const res = $("#quizResult_k5");
+  let level = null;
+  if(score===5) level="gold"; else if(score===4) level="silver"; else if(score===3) level="bronze";
+  if(level){
+    res.className="result pass"; res.style.display="block";
+    res.innerHTML = `<strong>Nice!</strong> You’ve earned the <span class="pill">${level.toUpperCase()} Readiness Badge</span>.`;
+    $("#badgeArea_k5").style.display="block"; drawBadge("ks5", level);
+    const s = getState(); s.badgeLevel = level; setState(s);
+  } else {
+    res.className="result fail"; res.style.display="block";
+    res.textContent = "You need at least 3 correct to earn a badge. Have another go.";
+  }
+  updateProgressUI();
+});
+
+$("#resetQuiz_k3")?.addEventListener("click", ()=>{
+  initQuizzes(); $("#quizResult_k3").style.display="none"; $("#badgeArea_k3").style.display="none";
+  const s = getState(); delete s.badgeLevel; setState(s); updateProgressUI();
+});
+$("#resetQuiz_k5")?.addEventListener("click", ()=>{
+  initQuizzes(); $("#quizResult_k5").style.display="none"; $("#badgeArea_k5").style.display="none";
+  const s = getState(); delete s.badgeLevel; setState(s); updateProgressUI();
+});
+
+/* ---------- Badge Drawing (circle for KS3, shield for KS5) ---------- */
+function drawBadge(path, level){
+  const id = path==="ks3" ? "badgeCanvas_k3" : "badgeCanvas_k5";
+  const c = document.getElementById(id);
+  const ctx = c.getContext("2d");
+  ctx.clearRect(0,0,c.width,c.height);
+  const W=c.width, H=c.height, CX=W/2, CY=H/2;
+
+  const rings = {
+    gold:   ["#f6e27a","#d4af37"],
+    silver: ["#e0e0e0","#a9a9a9"],
+    bronze: ["#d7a86e","#8b5a2b"]
+  };
+  const ring = rings[level] || ["#cfd6e1","#8a95a5"];
+
+  if(path==="ks3"){
+    // Circular badge
+    const rg = ctx.createRadialGradient(CX,CY,80,CX,CY,380);
+    rg.addColorStop(0, ring[0]); rg.addColorStop(1, ring[1]);
+    ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(CX,CY,360,0,Math.PI*2); ctx.fill();
+
+    // white inner
+    ctx.fillStyle="#fff"; ctx.beginPath(); ctx.arc(CX,CY,280,0,Math.PI*2); ctx.fill();
+
+    // Title & subtitle
+    ctx.fillStyle = "#0A2C66"; ctx.font = "bold 44px Inter, Arial"; center(ctx,"COGNITA SCHOOLS",CX,CY-60);
+    ctx.fillStyle = "#3b2a82"; ctx.font = "700 36px Inter, Arial"; center(ctx,"Digital Excellence",CX,CY-10);
+
+    // Award banner
+    ctx.fillStyle = ring[1]; roundRect(ctx, CX-200, CY+90, 400, 70, 22, true, false);
+    ctx.fillStyle = "#fff"; ctx.font = "bold 34px Inter, Arial"; center(ctx, `Award: ${level.toUpperCase()}`, CX, CY+136);
+
+  } else {
+    // Shield badge for KS5
+    // Outer gradient backdrop
+    const lg = ctx.createLinearGradient(0,0,W,H);
+    lg.addColorStop(0, ring[0]); lg.addColorStop(1, ring[1]);
+    ctx.fillStyle = lg; roundRect(ctx, 100, 80, W-200, H-160, 60, true, false);
+
+    // Shield white inset
+    ctx.fillStyle="#fff";
+    drawShield(ctx, CX, CY, 260, 320); ctx.fill();
+
+    // Title & subtitle
+    ctx.fillStyle = "#0A2C66"; ctx.font = "bold 44px Inter, Arial"; center(ctx,"COGNITA SCHOOLS",CX,CY-80);
+    ctx.fillStyle = "#3b2a82"; ctx.font = "700 34px Inter, Arial"; center(ctx,"Sixth Form Digital Readiness",CX,CY-30);
+
+    // Banner
+    ctx.fillStyle = ring[1]; roundRect(ctx, CX-220, CY+140, 440, 70, 24, true, false);
+    ctx.fillStyle = "#fff"; ctx.font = "bold 34px Inter, Arial"; center(ctx, `${level.toUpperCase()} BADGE`, CX, CY+186);
+  }
+}
+function center(ctx, text, x, y){ const w = ctx.measureText(text).width; ctx.fillText(text, x - w/2, y); }
+function roundRect(ctx, x,y,w,h,r, fill=true, stroke=false){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+  if(fill) ctx.fill();
+  if(stroke) ctx.stroke();
+}
+function drawShield(ctx, cx, cy, w, h){
+  const top = cy - h/2, bottom = cy + h/2, left = cx - w/2, right = cx + w/2;
+  ctx.beginPath();
+  ctx.moveTo(cx, top);
+  ctx.lineTo(right, top + h*0.25);
+  ctx.lineTo(right - w*0.12, bottom - h*0.25);
+  ctx.lineTo(cx, bottom);
+  ctx.lineTo(left + w*0.12, bottom - h*0.25);
+  ctx.lineTo(left, top + h*0.25);
+  ctx.closePath();
+}
+
+/* ---------- Downloads ---------- */
+$("#dlBadge_k3")?.addEventListener("click", ()=>downloadCanvas("badgeCanvas_k3","Student-Badge-KS3.png"));
+$("#dlBadge_k5")?.addEventListener("click", ()=>downloadCanvas("badgeCanvas_k5","Student-Badge-KS5.png"));
+function downloadCanvas(canvasId, filename){
+  const link = document.createElement('a'); link.download = filename;
+  link.href = document.getElementById(canvasId).toDataURL("image/png"); link.click();
+}
+
+/* ---------- Boot ---------- */
+document.addEventListener("DOMContentLoaded", ()=>{
+  const remembered = localStorage.getItem(STORAGE.path);
+  if(remembered==="ks3"||remembered==="ks5"){ selectPath(remembered); }
+  else { $("#landing").classList.remove("hidden"); updateProgressUI(); }
+});
+</script>
 </body>
 </html>
